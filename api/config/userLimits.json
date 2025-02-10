@@ -1,0 +1,7 @@
+{
+  "defaultLimit": 7,
+  "specialUsers": {
+    "example@gmail.com": 20,
+    "ss.stha00@gmail.com": -1
+  }
+}

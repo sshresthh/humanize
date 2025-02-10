@@ -6,6 +6,7 @@ import {
   SignedIn,
   SignedOut,
   useAuth,
+  useUser,
 } from "@clerk/clerk-react";
 import {
   AlignLeft,
@@ -13,6 +14,7 @@ import {
   Clock,
   Copy,
   Hash,
+  Infinity,
   Instagram,
   Loader2,
   Maximize2,
@@ -53,7 +55,8 @@ const LoadingTimer = () => {
 };
 
 export function Humanizer() {
-  const { getToken } = useAuth();
+  const { getToken, userId } = useAuth();
+  const { user } = useUser();
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +64,51 @@ export function Humanizer() {
   const [isCopied, setIsCopied] = useState(false);
   const [isInputMaximized, setIsInputMaximized] = useState(false);
   const [isOutputMaximized, setIsOutputMaximized] = useState(false);
+  const [generationsLeft, setGenerationsLeft] = useState<number | "unlimited">(
+    "unlimited"
+  );
+  const [totalGenerations, setTotalGenerations] = useState(0);
+
+  // Store user email in localStorage
+  useEffect(() => {
+    if (user?.primaryEmailAddress?.emailAddress) {
+      localStorage.setItem(
+        "clerk-user-email",
+        user.primaryEmailAddress.emailAddress
+      );
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const checkGenerationStatus = async () => {
+      try {
+        const token = await getToken();
+        if (!token) return;
+
+        const response = await fetch("/api/humanize", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            "x-clerk-user-id": userId || "",
+            "x-clerk-user-email":
+              localStorage.getItem("clerk-user-email") || "",
+          },
+          body: JSON.stringify({ text: " " }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setGenerationsLeft(data.generationsLeft);
+          setTotalGenerations(data.totalGenerations);
+        }
+      } catch (error) {
+        console.error("Failed to check generation status:", error);
+      }
+    };
+
+    checkGenerationStatus();
+  }, [getToken, userId]);
 
   const calculateStats = (text: string): TextStats => {
     return {
@@ -81,7 +129,6 @@ export function Humanizer() {
     setOutputText("");
 
     try {
-      // Get the session token
       const token = await getToken();
 
       if (!token) {
@@ -93,6 +140,8 @@ export function Humanizer() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "x-clerk-user-id": userId || "",
+          "x-clerk-user-email": localStorage.getItem("clerk-user-email") || "",
         },
         body: JSON.stringify({ text: inputText }),
       });
@@ -100,18 +149,22 @@ export function Humanizer() {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 429) {
+          // Rate limit reached
+          throw new Error(data.error);
+        }
         if (response.status === 401) {
-          // Handle unauthorized access
           throw new Error("Please sign in to use this feature");
         }
         throw new Error(data.error || "Failed to humanize text");
       }
 
       setOutputText(data.humanizedText);
+      setGenerationsLeft(data.generationsLeft);
+      setTotalGenerations(data.totalGenerations);
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
       if (error instanceof Error && error.message.includes("sign in")) {
-        // Redirect to sign in if authentication error
         window.location.href = "/sign-in";
       }
     } finally {
@@ -160,6 +213,29 @@ export function Humanizer() {
                 Transform your text into natural, human-like writing with the
                 power of AI
               </p>
+              <div className="mt-4 text-sm text-muted-foreground flex items-center justify-center gap-2">
+                {generationsLeft === "unlimited" ? (
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                    <Infinity className="w-3.5 h-3.5" />
+                    <span className="font-medium">Unlimited Access</span>
+                  </div>
+                ) : (
+                  <div className="px-3 py-1 rounded-full bg-muted/50 border border-border/40">
+                    <span>
+                      {generationsLeft} generation
+                      {generationsLeft !== 1 ? "s" : ""} remaining
+                    </span>
+                  </div>
+                )}
+                {(totalGenerations > 0 || generationsLeft === "unlimited") && (
+                  <div className="px-3 py-1 rounded-full bg-muted/50 border border-border/40">
+                    <span>
+                      {totalGenerations} generation
+                      {totalGenerations !== 1 ? "s" : ""} used
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div

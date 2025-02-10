@@ -1,7 +1,5 @@
-import { TextHumanizer } from "./text-humanizer";
+import { Humanizer } from "./Humanizer";
 
-function Home() {
-  return <TextHumanizer />;
+export function Home() {
+  return <Humanizer />;
 }
-
-export default Home;

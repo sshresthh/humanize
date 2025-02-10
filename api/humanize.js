@@ -1,25 +1,21 @@
-import { getAuth } from "@clerk/nextjs/server";
-
 // Serverless function to handle Qwen AI integration
 export default async function handler(req, res) {
   try {
-    // Get auth session
-    const { userId } = getAuth(req);
-
-    // Check if user is authenticated
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. Please sign in." });
-    }
-
     // Only allow POST requests
     if (req.method !== "POST") {
-      return res.status(405).json({ error: "Method not allowed. Use POST." });
+      return res.status(405).json({
+        error: "Method not allowed. Use POST.",
+        message: "Invalid request method",
+      });
     }
 
     // Get input text from request body
     const { text } = req.body;
     if (!text) {
-      return res.status(400).json({ error: "Text input is required." });
+      return res.status(400).json({
+        error: "Text input is required.",
+        message: "Missing required field",
+      });
     }
 
     // Call Qwen API
@@ -59,33 +55,43 @@ export default async function handler(req, res) {
       }
     );
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("API Error Response:", errorData);
-      try {
-        const parsedError = JSON.parse(errorData);
-        throw new Error(parsedError.message || "Failed to process text");
-      } catch (parseError) {
-        throw new Error(`API Error: ${response.status} ${response.statusText}`);
-      }
+    let responseData;
+    const responseText = await response.text();
+
+    try {
+      responseData = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error("Failed to parse API response:", responseText);
+      return res.status(500).json({
+        error: "Invalid response from AI service",
+        message: "Failed to process the request",
+      });
     }
 
-    const data = await response.json();
-    console.log("API Response:", data); // Debug log
+    if (!response.ok) {
+      console.error("API Error Response:", responseData);
+      return res.status(response.status).json({
+        error: responseData.message || "Failed to process text",
+        message: "AI service error",
+      });
+    }
 
-    if (!data.choices?.[0]?.message?.content) {
-      console.error("Invalid API Response:", data);
-      throw new Error("Invalid response format from API");
+    if (!responseData.choices?.[0]?.message?.content) {
+      console.error("Invalid API Response:", responseData);
+      return res.status(500).json({
+        error: "Invalid response format from API",
+        message: "Unexpected response structure",
+      });
     }
 
     return res.status(200).json({
-      humanizedText: data.choices[0].message.content.trim(),
+      humanizedText: responseData.choices[0].message.content.trim(),
     });
   } catch (error) {
     console.error("Error processing text:", error);
     return res.status(500).json({
       error: "Failed to process text. Please try again.",
-      details: error.message,
+      message: error.message || "Internal server error",
     });
   }
 }

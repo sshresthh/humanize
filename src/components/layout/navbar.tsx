@@ -1,13 +1,10 @@
-import { motion } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Home, Info, LogIn } from "lucide-react";
+import { motion } from "framer-motion";
+import { Home, LogIn, Sparkles } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
-const navItems = [
-  { path: "/", label: "Home", icon: Home },
-  { path: "/about", label: "About", icon: Info },
-];
+const navItems = [{ path: "/", label: "Home", icon: Home }];
 
 export function Navbar() {
   const location = useLocation();
@@ -34,7 +31,11 @@ export function Navbar() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-2 px-3 py-2 rounded-md transition-all ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md transition-all ${
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
                 <Icon className="w-4 h-4" />
                 {item.label}

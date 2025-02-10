@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Github, Twitter, Linkedin } from "lucide-react";
+import { Github, Linkedin, Twitter } from "lucide-react";
 
 export function Footer() {
   return (
@@ -29,10 +29,8 @@ export function Footer() {
 
           <div>
             <h4 className="font-semibold mb-4">Company</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>About</li>
-              <li>Blog</li>
-              <li>Careers</li>
+            <ul className="flex flex-col gap-2">
+              <li>Home</li>
             </ul>
           </div>
 

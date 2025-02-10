@@ -4,13 +4,14 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   AlignLeft,
   Check,
+  Clock,
   Copy,
   Hash,
   Loader2,
   Pilcrow,
   Type,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface TextStats {
   characters: number;
@@ -18,6 +19,29 @@ interface TextStats {
   sentences: number;
   paragraphs: number;
 }
+
+const LoadingTimer = () => {
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setElapsedTime((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="flex items-center justify-center gap-1.5 text-muted-foreground/80 mt-4 animate-in fade-in duration-700">
+      <Clock className="w-4 h-4 animate-pulse" />
+      <span className="text-sm tabular-nums font-medium">
+        {elapsedTime < 60
+          ? `${elapsedTime}s`
+          : `${Math.floor(elapsedTime / 60)}m ${elapsedTime % 60}s`}
+      </span>
+    </div>
+  );
+};
 
 export function Humanizer() {
   const [inputText, setInputText] = useState("");
@@ -86,141 +110,172 @@ export function Humanizer() {
     label: string;
     value: number;
   }) => (
-    <div className="flex items-center gap-2">
-      <Icon className="w-4 h-4 text-muted-foreground" />
-      <span className="text-sm text-muted-foreground">{label}:</span>
-      <span className="text-sm font-medium">{value}</span>
+    <div className="flex items-center gap-2.5 bg-background/50 px-3 py-2 rounded-md">
+      <Icon className="w-4 h-4 text-primary/70" />
+      <span className="text-sm font-medium text-muted-foreground">
+        {label}:
+      </span>
+      <span className="text-sm font-semibold">{value}</span>
     </div>
   );
 
   return (
-    <div className="container max-w-[90rem] mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-          AI Text Humanizer
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Transform your text into natural, human-like writing
-        </p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <div className="container max-w-[90rem] mx-auto px-4 py-12 flex-grow">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary/90 via-primary to-primary/90 bg-clip-text text-transparent">
+            AI Text Humanizer
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Transform your text into natural, human-like writing with the power
+            of AI
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto">
-        {/* Input Section */}
-        <Card className="p-8 shadow-lg border-2">
-          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-            <span className="bg-primary/10 p-2 rounded-md">Original Text</span>
-          </h2>
-          <div className="space-y-6">
-            <Textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Type or paste your text here..."
-              className="min-h-[400px] resize-none focus:ring-2 focus:ring-primary/20 text-base"
-              disabled={isLoading}
-            />
-            <div className="flex flex-wrap gap-6 justify-center bg-muted/50 p-4 rounded-md">
-              <StatDisplay
-                icon={Type}
-                label="Characters"
-                value={inputStats.characters}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mx-auto">
+          {/* Input Section */}
+          <Card className="p-8 shadow-xl border-2 hover:border-primary/20 transition-colors">
+            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+              <span className="text-foreground">Original Text</span>
+            </h2>
+            <div className="space-y-6">
+              <Textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Type or paste your text here..."
+                className="min-h-[400px] resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20"
+                disabled={isLoading}
               />
-              <StatDisplay icon={Hash} label="Words" value={inputStats.words} />
-              <StatDisplay
-                icon={AlignLeft}
-                label="Sentences"
-                value={inputStats.sentences}
-              />
-              <StatDisplay
-                icon={Pilcrow}
-                label="Paragraphs"
-                value={inputStats.paragraphs}
-              />
-            </div>
-            <Button
-              onClick={handleSubmit}
-              disabled={!inputText || isLoading}
-              className="w-full bg-primary hover:bg-primary/90"
-              size="lg"
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? "Humanizing..." : "Humanize Text"}
-            </Button>
-            {error && (
-              <div className="text-red-500 text-sm mt-2 text-center bg-red-50 p-2 rounded-md">
-                {error}
+              <div className="flex flex-wrap gap-4 justify-between bg-muted/50 p-4 rounded-lg backdrop-blur-sm">
+                <StatDisplay
+                  icon={Type}
+                  label="Characters"
+                  value={inputStats.characters}
+                />
+                <StatDisplay
+                  icon={Hash}
+                  label="Words"
+                  value={inputStats.words}
+                />
+                <StatDisplay
+                  icon={AlignLeft}
+                  label="Sentences"
+                  value={inputStats.sentences}
+                />
+                <StatDisplay
+                  icon={Pilcrow}
+                  label="Paragraphs"
+                  value={inputStats.paragraphs}
+                />
               </div>
-            )}
-          </div>
-        </Card>
-
-        {/* Output Section */}
-        <Card className="p-8 shadow-lg border-2">
-          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-            <span className="bg-primary/10 p-2 rounded-md">Humanized Text</span>
-          </h2>
-          <div className="space-y-6">
-            {isLoading ? (
-              <div className="flex items-center justify-center min-h-[400px] bg-muted/30 rounded-md">
-                <div className="text-center">
-                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-                  <p className="text-muted-foreground">
-                    Transforming your text...
-                  </p>
+              <Button
+                onClick={handleSubmit}
+                disabled={!inputText || isLoading}
+                className="w-full bg-primary hover:bg-primary/90 transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none"
+                size="lg"
+              >
+                {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                {isLoading ? "Humanizing..." : "Humanize Text"}
+              </Button>
+              {error && (
+                <div className="text-red-500 text-sm mt-2 text-center bg-red-50 p-3 rounded-lg border border-red-100 animate-in fade-in duration-200">
+                  {error}
                 </div>
-              </div>
-            ) : (
-              <div className="min-h-[400px] bg-muted/30 rounded-md p-6 relative group">
-                {outputText ? (
-                  <>
-                    <div className="whitespace-pre-wrap text-base">
+              )}
+            </div>
+          </Card>
+
+          {/* Output Section */}
+          <Card className="p-8 shadow-xl border-2 hover:border-primary/20 transition-colors">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold">
+                <span className="text-foreground">Humanized Text</span>
+              </h2>
+              {outputText && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex items-center gap-2 transition-colors duration-200"
+                  onClick={handleCopy}
+                  title="Copy to clipboard"
+                >
+                  {isCopied ? (
+                    <>
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span className="text-sm text-green-500">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      <span className="text-sm">Copy</span>
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+            <div className="space-y-6">
+              {isLoading ? (
+                <div className="flex items-center justify-center min-h-[400px] bg-muted/30 rounded-lg animate-pulse">
+                  <div className="text-center space-y-2">
+                    <div className="relative">
+                      <div className="absolute inset-0 animate-ping opacity-25">
+                        <Loader2 className="h-10 w-10 mx-auto text-primary" />
+                      </div>
+                      <Loader2 className="h-10 w-10 animate-spin mx-auto text-primary relative" />
+                    </div>
+                    <p className="text-muted-foreground font-medium mt-4">
+                      Transforming your text...
+                    </p>
+                    <LoadingTimer />
+                  </div>
+                </div>
+              ) : (
+                <div className="min-h-[400px] bg-muted/30 rounded-lg p-6 relative group transition-all duration-200 hover:bg-muted/40">
+                  {outputText ? (
+                    <div className="whitespace-pre-wrap text-base leading-relaxed">
                       {outputText}
                     </div>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={handleCopy}
-                      title="Copy to clipboard"
-                    >
-                      {isCopied ? (
-                        <Check className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </>
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                    Humanized text will appear here
-                  </div>
-                )}
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-medium">
+                      Humanized text will appear here
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-4 justify-between bg-muted/50 p-4 rounded-lg backdrop-blur-sm">
+                <StatDisplay
+                  icon={Type}
+                  label="Characters"
+                  value={outputStats.characters}
+                />
+                <StatDisplay
+                  icon={Hash}
+                  label="Words"
+                  value={outputStats.words}
+                />
+                <StatDisplay
+                  icon={AlignLeft}
+                  label="Sentences"
+                  value={outputStats.sentences}
+                />
+                <StatDisplay
+                  icon={Pilcrow}
+                  label="Paragraphs"
+                  value={outputStats.paragraphs}
+                />
               </div>
-            )}
-            <div className="flex flex-wrap gap-6 justify-center bg-muted/50 p-4 rounded-md">
-              <StatDisplay
-                icon={Type}
-                label="Characters"
-                value={outputStats.characters}
-              />
-              <StatDisplay
-                icon={Hash}
-                label="Words"
-                value={outputStats.words}
-              />
-              <StatDisplay
-                icon={AlignLeft}
-                label="Sentences"
-                value={outputStats.sentences}
-              />
-              <StatDisplay
-                icon={Pilcrow}
-                label="Paragraphs"
-                value={outputStats.paragraphs}
-              />
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
+      <footer className="py-6 border-t border-border/40 mt-12">
+        <div className="container max-w-[90rem] mx-auto px-4 text-center text-sm text-muted-foreground">
+          <p>
+            © 2025 AI Humanizer. All rights reserved. Developed by Shyamsundar
+            Shrestha for friends and family.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

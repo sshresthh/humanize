@@ -58,6 +58,7 @@ const DEFAULT_LIMIT = 7;
 export function Humanizer() {
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
+  const [editableOutput, setEditableOutput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
@@ -77,6 +78,11 @@ export function Humanizer() {
   useEffect(() => {
     localStorage.setItem("generation-count", generationCount.toString());
   }, [generationCount]);
+
+  // Update editableOutput when outputText changes
+  useEffect(() => {
+    setEditableOutput(outputText);
+  }, [outputText]);
 
   const calculateStats = (text: string): TextStats => {
     return {
@@ -148,6 +154,13 @@ export function Humanizer() {
     }
   };
 
+  const handleRehumanize = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Use the edited output as the new input
+    setInputText(editableOutput);
+    handleSubmit(e);
+  };
+
   const StatDisplay = ({
     icon: Icon,
     label,
@@ -187,78 +200,91 @@ export function Humanizer() {
           {!isOutputMaximized && (
             <Card
               className={`p-4 sm:p-6 lg:p-8 shadow-xl border-2 hover:border-primary/20 transition-colors ${
-                isInputMaximized ? "col-span-full" : ""
+                isInputMaximized ? "col-span-full fixed inset-4 z-50" : ""
               }`}
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
-                <h2 className="text-xl sm:text-2xl font-semibold">
-                  <span className="text-foreground">Original Text</span>
-                </h2>
-                <div className="flex items-center gap-3">
+              <div
+                className={`${isInputMaximized ? "h-full" : ""} flex flex-col`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
+                  <h2 className="text-xl sm:text-2xl font-semibold">
+                    <span className="text-foreground">Original Text</span>
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setInputText("")}
+                      className="flex items-center gap-2 text-xs sm:text-sm"
+                      disabled={!inputText || isLoading}
+                    >
+                      Clear All
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setIsInputMaximized(!isInputMaximized)}
+                      className="flex items-center gap-2"
+                      title={isInputMaximized ? "Minimize" : "Maximize"}
+                    >
+                      {isInputMaximized ? (
+                        <Minimize2 className="h-4 w-4" />
+                      ) : (
+                        <Maximize2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <div className="space-y-4 sm:space-y-6 flex-1 flex flex-col">
+                  <div className="flex flex-wrap items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto mb-4">
+                    <StatDisplay
+                      icon={Type}
+                      label="Characters"
+                      value={inputStats.characters}
+                    />
+                    <StatDisplay
+                      icon={Hash}
+                      label="Words"
+                      value={inputStats.words}
+                    />
+                    <StatDisplay
+                      icon={AlignLeft}
+                      label="Sentences"
+                      value={inputStats.sentences}
+                    />
+                    <StatDisplay
+                      icon={Pilcrow}
+                      label="Paragraphs"
+                      value={inputStats.paragraphs}
+                    />
+                  </div>
+                  <div
+                    className={`flex-1 ${
+                      isInputMaximized
+                        ? "overflow-y-auto"
+                        : "min-h-[300px] sm:min-h-[400px] lg:min-h-[600px]"
+                    } bg-muted/30 rounded-lg relative group transition-all duration-200 hover:bg-muted/40`}
+                  >
+                    <Textarea
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      placeholder="Type or paste your text here..."
+                      className="w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[600px] p-4 resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20 bg-transparent"
+                      disabled={isLoading}
+                    />
+                  </div>
                   <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setInputText("")}
-                    className="flex items-center gap-2 text-xs sm:text-sm"
+                    onClick={handleSubmit}
                     disabled={!inputText || isLoading}
+                    className="w-full bg-primary hover:bg-primary/90 transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none text-sm sm:text-base"
+                    size="lg"
                   >
-                    Clear All
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setIsInputMaximized(!isInputMaximized)}
-                    className="flex items-center gap-2"
-                  >
-                    {isInputMaximized ? (
-                      <Minimize2 className="h-4 w-4" />
-                    ) : (
-                      <Maximize2 className="h-4 w-4" />
+                    {isLoading && (
+                      <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
                     )}
+                    {isLoading ? "Humanizing..." : "Humanize Text"}
                   </Button>
                 </div>
-              </div>
-              <div className="space-y-4 sm:space-y-6">
-                <div className="flex flex-wrap items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
-                  <StatDisplay
-                    icon={Type}
-                    label="Characters"
-                    value={inputStats.characters}
-                  />
-                  <StatDisplay
-                    icon={Hash}
-                    label="Words"
-                    value={inputStats.words}
-                  />
-                  <StatDisplay
-                    icon={AlignLeft}
-                    label="Sentences"
-                    value={inputStats.sentences}
-                  />
-                  <StatDisplay
-                    icon={Pilcrow}
-                    label="Paragraphs"
-                    value={inputStats.paragraphs}
-                  />
-                </div>
-                <Textarea
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Type or paste your text here..."
-                  className="min-h-[300px] sm:min-h-[400px] lg:min-h-[600px] resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20"
-                  disabled={isLoading}
-                />
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!inputText || isLoading}
-                  className="w-full bg-primary hover:bg-primary/90 transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none text-sm sm:text-base"
-                  size="lg"
-                >
-                  {isLoading && (
-                    <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
-                  )}
-                  {isLoading ? "Humanizing..." : "Humanize Text"}
-                </Button>
               </div>
             </Card>
           )}
@@ -267,13 +293,11 @@ export function Humanizer() {
           {!isInputMaximized && (
             <Card
               className={`p-4 sm:p-6 lg:p-8 shadow-xl border-2 hover:border-primary/20 transition-colors ${
-                isOutputMaximized ? "col-span-full h-[calc(100vh-16rem)]" : ""
+                isOutputMaximized ? "col-span-full fixed inset-4 z-50" : ""
               }`}
             >
               <div
-                className={`space-y-4 sm:space-y-6 ${
-                  isOutputMaximized ? "h-full flex flex-col" : ""
-                }`}
+                className={`${isOutputMaximized ? "h-full" : ""} flex flex-col`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
@@ -320,75 +344,80 @@ export function Humanizer() {
                     </Button>
                   </div>
                 </div>
-                <div className="flex flex-wrap items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
-                  <StatDisplay
-                    icon={Type}
-                    label="Characters"
-                    value={outputStats.characters}
-                  />
-                  <StatDisplay
-                    icon={Hash}
-                    label="Words"
-                    value={outputStats.words}
-                  />
-                  <StatDisplay
-                    icon={AlignLeft}
-                    label="Sentences"
-                    value={outputStats.sentences}
-                  />
-                  <StatDisplay
-                    icon={Pilcrow}
-                    label="Paragraphs"
-                    value={outputStats.paragraphs}
-                  />
-                </div>
-                {isLoading ? (
-                  <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px] lg:min-h-[600px] bg-muted/30 rounded-lg animate-pulse">
-                    <div className="text-center space-y-2">
-                      <div className="relative">
-                        <div className="absolute inset-0 animate-ping opacity-25">
-                          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 mx-auto text-primary" />
+                <div className="space-y-4 sm:space-y-6 flex-1 flex flex-col">
+                  <div className="flex flex-wrap items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto mb-4">
+                    <StatDisplay
+                      icon={Type}
+                      label="Characters"
+                      value={outputStats.characters}
+                    />
+                    <StatDisplay
+                      icon={Hash}
+                      label="Words"
+                      value={outputStats.words}
+                    />
+                    <StatDisplay
+                      icon={AlignLeft}
+                      label="Sentences"
+                      value={outputStats.sentences}
+                    />
+                    <StatDisplay
+                      icon={Pilcrow}
+                      label="Paragraphs"
+                      value={outputStats.paragraphs}
+                    />
+                  </div>
+                  {isLoading ? (
+                    <div className="flex-1 flex items-center justify-center min-h-[300px] sm:min-h-[400px] lg:min-h-[600px] bg-muted/30 rounded-lg animate-pulse">
+                      <div className="text-center space-y-2">
+                        <div className="relative">
+                          <div className="absolute inset-0 animate-ping opacity-25">
+                            <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 mx-auto text-primary" />
+                          </div>
+                          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin mx-auto text-primary relative" />
                         </div>
-                        <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin mx-auto text-primary relative" />
+                        <p className="text-sm sm:text-base text-muted-foreground font-medium mt-4">
+                          Transforming your text...
+                        </p>
+                        <LoadingTimer />
                       </div>
-                      <p className="text-sm sm:text-base text-muted-foreground font-medium mt-4">
-                        Transforming your text...
-                      </p>
-                      <LoadingTimer />
                     </div>
-                  </div>
-                ) : (
-                  <div
-                    className={`${
-                      isOutputMaximized
-                        ? "flex-grow"
-                        : "min-h-[300px] sm:min-h-[400px] lg:min-h-[600px]"
-                    } bg-muted/30 rounded-lg p-4 sm:p-6 relative group transition-all duration-200 hover:bg-muted/40 overflow-y-auto`}
-                  >
-                    {outputText ? (
-                      <div className="whitespace-pre-wrap text-sm sm:text-base leading-relaxed">
-                        {outputText}
-                      </div>
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-sm sm:text-base text-muted-foreground font-medium text-center px-4">
-                        Humanized text will appear here
-                      </div>
-                    )}
-                  </div>
-                )}
-                {outputText && (
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={!inputText || isLoading}
-                    className="w-full bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none text-sm sm:text-base mt-4 sm:mt-6"
-                    size="lg"
-                  >
-                    {isLoading && (
-                      <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
-                    )}
-                    {isLoading ? "Rehumanizing..." : "Rehumanize Text"}
-                  </Button>
-                )}
+                  ) : (
+                    <div
+                      className={`flex-1 ${
+                        isOutputMaximized
+                          ? "overflow-y-auto"
+                          : "min-h-[300px] sm:min-h-[400px] lg:min-h-[600px]"
+                      } bg-muted/30 rounded-lg relative group transition-all duration-200 hover:bg-muted/40`}
+                    >
+                      {outputText ? (
+                        <Textarea
+                          value={editableOutput}
+                          onChange={(e) => setEditableOutput(e.target.value)}
+                          className="w-full h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[600px] p-4 resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20 bg-transparent"
+                          placeholder="Edit the humanized text..."
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-sm sm:text-base text-muted-foreground font-medium text-center px-4">
+                          Humanized text will appear here
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {outputText && (
+                    <Button
+                      onClick={handleRehumanize}
+                      disabled={!editableOutput || isLoading}
+                      className="w-full bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none text-sm sm:text-base mt-4 sm:mt-6"
+                      size="lg"
+                    >
+                      {isLoading && (
+                        <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                      )}
+                      {isLoading ? "Rehumanizing..." : "Rehumanize Text"}
+                    </Button>
+                  )}
+                </div>
               </div>
             </Card>
           )}

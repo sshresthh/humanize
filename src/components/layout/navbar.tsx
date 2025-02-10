@@ -14,20 +14,22 @@ export function Navbar() {
       animate={{ y: 0 }}
       className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-b shadow-sm"
     >
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl">
-          <Sparkles className="w-6 h-6 text-primary" />
-          <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-bold tracking-tight">
-            Humanize
-          </span>
-          <span className="text-[10px] uppercase tracking-wider font-semibold bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 text-transparent bg-clip-text relative px-1.5 py-0.5 rounded-full border border-purple-500/30">
-            <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
-              beta
+      <div className="container mx-auto px-4 h-16 flex items-center">
+        <div className="flex-1 flex items-center justify-start">
+          <Link to="/" className="flex items-center gap-2 font-bold text-xl">
+            <Sparkles className="w-6 h-6 text-primary" />
+            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-bold tracking-tight">
+              Humanize
             </span>
-          </span>
-        </Link>
+            <span className="text-[10px] uppercase tracking-wider font-semibold bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 text-transparent bg-clip-text relative px-1.5 py-0.5 rounded-full border border-purple-500/30">
+              <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
+                beta
+              </span>
+            </span>
+          </Link>
+        </div>
 
-        <div className="hidden md:flex items-center gap-6">
+        <div className="flex-1 flex items-center justify-center">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
@@ -48,7 +50,7 @@ export function Navbar() {
           })}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex-1 flex items-center justify-end">
           <ThemeToggle />
         </div>
       </div>

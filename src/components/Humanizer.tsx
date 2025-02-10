@@ -174,8 +174,7 @@ export function Humanizer() {
             AI Text Humanizer
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-            Transform your text into natural, human-like writing with the power
-            of AI
+            Transform your text into natural, human-like writing
           </p>
         </div>
 

@@ -52,8 +52,8 @@ export default async function handler(req, res) {
               content: text,
             },
           ],
-          temperature: 1.9,
-          top_p: 0.8,
+          temperature: 1.5,
+          top_p: 0.6,
         }),
       }
     );

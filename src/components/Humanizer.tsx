@@ -390,6 +390,17 @@ export function Humanizer() {
           <div className="flex justify-center items-center gap-2 mt-2">
             <Instagram size={16} />
             <a
+              href="https://instagram.com/saeshhdu"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              @saeshhdu
+            </a>
+          </div>
+          <div className="flex justify-center items-center gap-2 mt-2">
+            <Instagram size={16} />
+            <a
               href="https://instagram.com/ss_stha00"
               target="_blank"
               rel="noopener noreferrer"

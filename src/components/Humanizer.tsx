@@ -110,19 +110,19 @@ export function Humanizer() {
     label: string;
     value: number;
   }) => (
-    <div className="flex items-center gap-2.5 bg-background/50 px-3 py-2 rounded-md">
-      <Icon className="w-4 h-4 text-primary/70" />
-      <span className="text-sm font-medium text-muted-foreground">
+    <div className="flex items-center gap-1.5 px-2 py-1.5">
+      <Icon className="w-3.5 h-3.5 text-primary/70" />
+      <span className="text-xs font-medium text-muted-foreground">
         {label}:
       </span>
-      <span className="text-sm font-semibold">{value}</span>
+      <span className="text-xs font-semibold tabular-nums">{value}</span>
     </div>
   );
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="container max-w-[90rem] mx-auto px-4 py-12 flex-grow">
-        <div className="text-center mb-12">
+      <div className="container max-w-screen-2xl mx-auto px-8 py-12 flex-grow">
+        <div className="text-center mb-16">
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary/90 via-primary to-primary/90 bg-clip-text text-transparent">
             AI Text Humanizer
           </h1>
@@ -132,21 +132,14 @@ export function Humanizer() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mx-auto mb-12">
           {/* Input Section */}
           <Card className="p-8 shadow-xl border-2 hover:border-primary/20 transition-colors">
-            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
               <span className="text-foreground">Original Text</span>
             </h2>
             <div className="space-y-6">
-              <Textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="Type or paste your text here..."
-                className="min-h-[400px] resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20"
-                disabled={isLoading}
-              />
-              <div className="flex flex-wrap gap-4 justify-between bg-muted/50 p-4 rounded-lg backdrop-blur-sm">
+              <div className="flex items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
                 <StatDisplay
                   icon={Type}
                   label="Characters"
@@ -168,6 +161,13 @@ export function Humanizer() {
                   value={inputStats.paragraphs}
                 />
               </div>
+              <Textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Type or paste your text here..."
+                className="min-h-[600px] resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20"
+                disabled={isLoading}
+              />
               <Button
                 onClick={handleSubmit}
                 disabled={!inputText || isLoading}
@@ -187,62 +187,34 @@ export function Humanizer() {
 
           {/* Output Section */}
           <Card className="p-8 shadow-xl border-2 hover:border-primary/20 transition-colors">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold">
-                <span className="text-foreground">Humanized Text</span>
-              </h2>
-              {outputText && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="flex items-center gap-2 transition-colors duration-200"
-                  onClick={handleCopy}
-                  title="Copy to clipboard"
-                >
-                  {isCopied ? (
-                    <>
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span className="text-sm text-green-500">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4" />
-                      <span className="text-sm">Copy</span>
-                    </>
-                  )}
-                </Button>
-              )}
-            </div>
             <div className="space-y-6">
-              {isLoading ? (
-                <div className="flex items-center justify-center min-h-[400px] bg-muted/30 rounded-lg animate-pulse">
-                  <div className="text-center space-y-2">
-                    <div className="relative">
-                      <div className="absolute inset-0 animate-ping opacity-25">
-                        <Loader2 className="h-10 w-10 mx-auto text-primary" />
-                      </div>
-                      <Loader2 className="h-10 w-10 animate-spin mx-auto text-primary relative" />
-                    </div>
-                    <p className="text-muted-foreground font-medium mt-4">
-                      Transforming your text...
-                    </p>
-                    <LoadingTimer />
-                  </div>
-                </div>
-              ) : (
-                <div className="min-h-[400px] bg-muted/30 rounded-lg p-6 relative group transition-all duration-200 hover:bg-muted/40">
-                  {outputText ? (
-                    <div className="whitespace-pre-wrap text-base leading-relaxed">
-                      {outputText}
-                    </div>
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-medium">
-                      Humanized text will appear here
-                    </div>
-                  )}
-                </div>
-              )}
-              <div className="flex flex-wrap gap-4 justify-between bg-muted/50 p-4 rounded-lg backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-semibold">
+                  <span className="text-foreground">Humanized Text</span>
+                </h2>
+                {outputText && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex items-center gap-2 transition-colors duration-200"
+                    onClick={handleCopy}
+                    title="Copy to clipboard"
+                  >
+                    {isCopied ? (
+                      <>
+                        <Check className="h-4 w-4 text-green-500" />
+                        <span className="text-sm text-green-500">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4" />
+                        <span className="text-sm">Copy</span>
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+              <div className="flex items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
                 <StatDisplay
                   icon={Type}
                   label="Characters"
@@ -264,16 +236,42 @@ export function Humanizer() {
                   value={outputStats.paragraphs}
                 />
               </div>
+              {isLoading ? (
+                <div className="flex items-center justify-center min-h-[600px] bg-muted/30 rounded-lg animate-pulse">
+                  <div className="text-center space-y-2">
+                    <div className="relative">
+                      <div className="absolute inset-0 animate-ping opacity-25">
+                        <Loader2 className="h-10 w-10 mx-auto text-primary" />
+                      </div>
+                      <Loader2 className="h-10 w-10 animate-spin mx-auto text-primary relative" />
+                    </div>
+                    <p className="text-muted-foreground font-medium mt-4">
+                      Transforming your text...
+                    </p>
+                    <LoadingTimer />
+                  </div>
+                </div>
+              ) : (
+                <div className="min-h-[600px] bg-muted/30 rounded-lg p-6 relative group transition-all duration-200 hover:bg-muted/40">
+                  {outputText ? (
+                    <div className="whitespace-pre-wrap text-base leading-relaxed">
+                      {outputText}
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-medium">
+                      Humanized text will appear here
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </Card>
         </div>
       </div>
-      <footer className="py-6 border-t border-border/40 mt-12">
-        <div className="container max-w-[90rem] mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>
-            © 2025 AI Humanizer. All rights reserved. Developed by Shyamsundar
-            Shrestha for friends and family.
-          </p>
+      <footer className="py-4 border-t border-border/40">
+        <div className="container max-w-screen-2xl mx-auto px-8 text-center text-sm text-muted-foreground">
+          <p className="mb-1">© 2025 Humanize. All rights reserved.</p>
+          <p>Developed by Shyamsundar Shrestha for friends and family</p>
         </div>
       </footer>
     </div>

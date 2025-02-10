@@ -26,10 +26,6 @@ function App() {
             )}
           </Routes>
         </main>
-        <footer className="py-6 text-center text-sm text-muted-foreground border-t">
-          <p>© 2025 AI Humanizer. All rights reserved.</p>
-          <p className="mt-1">Developed by Shyamsundar Shrestha for friends and family</p>
-        </footer>
       </div>
     </Suspense>
   );

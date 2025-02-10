@@ -1,29 +1,10 @@
-import {
-  canUserGenerate,
-  getUserGenerationsCount,
-  getUserLimit,
-  incrementUserGenerations,
-} from "./models/userGenerations";
+import { getAuth } from "@clerk/nextjs/server";
 
 // Serverless function to handle Qwen AI integration
 export default async function handler(req, res) {
   try {
-    // Get auth from Authorization header
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized. Please sign in." });
-    }
-
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      return res
-        .status(401)
-        .json({ error: "Invalid token. Please sign in again." });
-    }
-
-    // Get user info from token
-    const userId = req.headers["x-clerk-user-id"];
-    const userEmail = req.headers["x-clerk-user-email"];
+    // Get auth session
+    const { userId } = getAuth(req);
 
     // Check if user is authenticated
     if (!userId) {
@@ -33,14 +14,6 @@ export default async function handler(req, res) {
     // Only allow POST requests
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Method not allowed. Use POST." });
-    }
-
-    // Check rate limit
-    if (!canUserGenerate(userId, userEmail)) {
-      const limit = getUserLimit(userEmail);
-      return res.status(429).json({
-        error: `You have reached your limit of ${limit} generations. Please contact support for more generations.`,
-      });
     }
 
     // Get input text from request body
@@ -105,17 +78,8 @@ export default async function handler(req, res) {
       throw new Error("Invalid response format from API");
     }
 
-    // Increment user's generation count only after successful generation
-    incrementUserGenerations(userId);
-
-    // Get updated counts for response
-    const currentCount = getUserGenerationsCount(userId, userEmail);
-    const limit = getUserLimit(userEmail);
-
     return res.status(200).json({
       humanizedText: data.choices[0].message.content.trim(),
-      generationsLeft: limit === -1 ? "unlimited" : limit - currentCount,
-      totalGenerations: currentCount,
     });
   } catch (error) {
     console.error("Error processing text:", error);

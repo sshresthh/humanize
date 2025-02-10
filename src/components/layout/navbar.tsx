@@ -22,8 +22,8 @@ export function Navbar() {
           <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-bold tracking-tight">
             Humanize
           </span>
-          <span className="text-[10px] uppercase tracking-wider font-black bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 text-transparent bg-clip-text relative px-1.5 py-0.5 rounded-full border border-purple-500/30">
-            <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient font-extrabold">beta</span>
+          <span className="text-[10px] uppercase tracking-wider font-semibold bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 text-transparent bg-clip-text relative px-1.5 py-0.5 rounded-full border border-purple-500/30">
+            <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">beta</span>
           </span>
         </Link>
 

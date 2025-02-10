@@ -74,7 +74,7 @@ This approach strategically introduces human fingerprints while preserving meani
             },
           ],
           temperature: 1.9,
-          top_p: 0.8,
+          top_p: 0.9,
         }),
       }
     );

@@ -2,10 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { HumanizerInput } from "./humanizer-input";
 import { HumanizerOutput } from "./humanizer-output";
-import React from "react";
 import { paraphraseText } from "@/lib/paraphraser";
 
-export function TextHumanizer() {
+export function WideHumanizer() {
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,27 +56,35 @@ export function TextHumanizer() {
   };
 
   return (
-    <div className="min-h-screen pt-32 sm:pt-36 lg:pt-40 pb-16 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+    <div className="min-h-screen pt-16 bg-background">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="container mx-auto py-8 px-4"
+      >
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-display font-semibold tracking-tight mb-3">
             What would you like to humanize?
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground font-display">
             Transform your text into natural, human-like writing
           </p>
-        </div>
+        </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-[1400px] mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1400px] mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="bg-background rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm border transition-all hover:shadow-md">
+          <div className="bg-background rounded-xl p-6 shadow-sm border">
             <HumanizerInput onSubmit={handleSubmit} disabled={loading} />
           </div>
-          <div className="bg-background rounded-xl p-4 sm:p-6 lg:p-8 shadow-sm border transition-all hover:shadow-md">
+          <div className="bg-background rounded-xl p-6 shadow-sm border">
             <HumanizerOutput
               text={outputText}
               type="standard"
@@ -86,7 +93,7 @@ export function TextHumanizer() {
             />
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   );
 }

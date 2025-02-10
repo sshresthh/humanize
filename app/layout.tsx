@@ -1,10 +1,7 @@
-import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-import "@/styles/globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import { ThemeProvider } from "../src/components/theme-provider";
+import { Navbar } from "../src/components/layout/navbar";
+import { Footer } from "../src/components/layout/footer";
+import "../src/index.css";
 
 export const metadata = {
   title: "AI Text Humanizer",
@@ -18,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

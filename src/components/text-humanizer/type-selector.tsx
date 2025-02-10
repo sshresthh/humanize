@@ -16,7 +16,7 @@ export function TypeSelector({ selected, onSelect }: TypeSelectorProps) {
     <RadioGroup
       value={selected}
       onValueChange={handleTypeChange}
-      className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+      className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto"
     >
       {humanizerTypes.map((type, index) => (
         <motion.div
@@ -50,10 +50,11 @@ export function TypeSelector({ selected, onSelect }: TypeSelectorProps) {
           />
           <Label
             htmlFor={type.value}
-            className={`flex flex-col items-center justify-center p-4 rounded-lg border backdrop-blur cursor-pointer transition-all duration-300 hover:shadow-lg hover:bg-accent/50 dark:hover:bg-accent/10 ${type.value === selected ? "bg-primary/20 border-primary shadow-xl scale-105 dark:shadow-primary/30 ring-2 ring-primary/50" : "bg-background/50 hover:bg-background/80 hover:scale-102 border-border"}`}
+            className={`flex flex-col items-center justify-center h-[100px] p-3 rounded-lg border backdrop-blur cursor-pointer transition-all duration-300 ${type.gradient} ${type.color} hover:shadow-xl hover:scale-105 hover:text-white ${type.value === selected ? "bg-gradient-to-r border-transparent shadow-lg scale-105 text-white" : "bg-card hover:border-transparent"}`}
           >
-            <span className="font-medium">{type.label}</span>
-            <span className="text-xs text-muted-foreground text-center mt-1">
+            <span className="text-lg mb-1">{type.icon}</span>
+            <span className="text-sm font-medium">{type.label}</span>
+            <span className="text-[11px] opacity-75 text-center leading-tight mt-0.5">
               {type.description}
             </span>
           </Label>

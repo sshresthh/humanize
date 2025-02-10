@@ -1,63 +1,44 @@
-export type HumanizerType =
-  | "free"
-  | "standard"
-  | "academic"
-  | "simple"
-  | "formal"
-  | "informal"
-  | "expand"
-  | "shorten"
-  | "ultra";
+export type HumanizerType = "simple" | "standard" | "academic" | "ultra";
 
 export const humanizerTypes: {
   label: string;
   value: HumanizerType;
   description: string;
+  color: string;
+  gradient: string;
+  icon: string;
 }[] = [
   {
-    label: "Free",
-    value: "free",
-    description: "Basic text humanization",
+    label: "Simple",
+    value: "simple",
+    description: "Clear and concise text",
+    color: "from-blue-500 to-cyan-400",
+    gradient: "hover:bg-gradient-to-r",
+    icon: "✨",
   },
   {
     label: "Standard",
     value: "standard",
-    description: "Balanced, natural language",
+    description: "Natural, balanced style",
+    color: "from-violet-500 to-purple-400",
+    gradient: "hover:bg-gradient-to-r",
+    icon: "🌟",
   },
   {
     label: "Academic",
     value: "academic",
-    description: "Formal academic style",
+    description: "Scholarly and formal",
+    color: "from-emerald-500 to-teal-400",
+    gradient: "hover:bg-gradient-to-r",
+    icon: "📚",
   },
   {
-    label: "Simple",
-    value: "simple",
-    description: "Clear and easy to understand",
-  },
-  {
-    label: "Formal",
-    value: "formal",
-    description: "Professional and polished",
-  },
-  {
-    label: "Informal",
-    value: "informal",
-    description: "Casual and conversational",
-  },
-  {
-    label: "Expand",
-    value: "expand",
-    description: "Make text longer and detailed",
-  },
-  {
-    label: "Shorten",
-    value: "shorten",
-    description: "Make text concise and brief",
-  },
-  {
-    label: "Ultra",
+    label: "Advanced",
     value: "ultra",
-    description: "Advanced AI processing",
+    description: "Enhanced AI processing",
+    color: "from-rose-500 to-pink-400",
+    gradient: "hover:bg-gradient-to-r",
+    icon: "⚡",
   },
 ];
 

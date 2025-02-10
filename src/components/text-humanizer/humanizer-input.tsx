@@ -127,8 +127,8 @@ export function HumanizerInput({ onSubmit, disabled }: HumanizerInputProps) {
           </Button>
         </div>
         <div className="text-sm text-muted-foreground space-x-4">
-          <span>{wordCount} words</span>
           <span>{charCount} characters</span>
+          <span>{wordCount} words</span>
           <span>{sentenceCount} sentences</span>
           <span>{paragraphCount} paragraphs</span>
         </div>
@@ -164,7 +164,7 @@ export function HumanizerInput({ onSubmit, disabled }: HumanizerInputProps) {
         </AnimatePresence>
         <Textarea
           placeholder="Enter or paste your text here..."
-          className="min-h-[300px] bg-background/50 dark:bg-background/25 backdrop-blur-sm font-mono text-sm border-none focus-visible:ring-1 focus-visible:ring-accent"
+          className="min-h-[500px] font-display text-base bg-background border-none focus-visible:ring-1 focus-visible:ring-primary/20 resize-none placeholder:text-muted-foreground/60"
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={disabled}

@@ -21,7 +21,9 @@ export function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl">
           <Sparkles className="w-6 h-6 text-primary" />
-          <span>AI Humanizer</span>
+          <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-bold tracking-tight">
+            Humanize
+          </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">

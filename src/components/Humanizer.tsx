@@ -168,12 +168,12 @@ export function Humanizer() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="container max-w-screen-2xl mx-auto px-8 py-12 flex-grow">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary/90 via-primary to-primary/90 bg-clip-text text-transparent">
+      <div className="container max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 flex-grow">
+        <div className="text-center mb-8 sm:mb-16">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-primary/90 via-primary to-primary/90 bg-clip-text text-transparent">
             AI Text Humanizer
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Transform your text into natural, human-like writing with the power
             of AI
           </p>
@@ -181,18 +181,18 @@ export function Humanizer() {
 
         <div
           className={`grid grid-cols-1 ${
-            !isInputMaximized && !isOutputMaximized ? "md:grid-cols-2" : ""
-          } gap-12 mx-auto mb-12`}
+            !isInputMaximized && !isOutputMaximized ? "lg:grid-cols-2" : ""
+          } gap-6 sm:gap-8 lg:gap-12 mx-auto mb-8 sm:mb-12`}
         >
           {/* Input Section */}
           {!isOutputMaximized && (
             <Card
-              className={`p-8 shadow-xl border-2 hover:border-primary/20 transition-colors ${
+              className={`p-4 sm:p-6 lg:p-8 shadow-xl border-2 hover:border-primary/20 transition-colors ${
                 isInputMaximized ? "col-span-full" : ""
               }`}
             >
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-semibold flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
+                <h2 className="text-xl sm:text-2xl font-semibold">
                   <span className="text-foreground">Original Text</span>
                 </h2>
                 <div className="flex items-center gap-3">
@@ -200,7 +200,7 @@ export function Humanizer() {
                     size="sm"
                     variant="outline"
                     onClick={() => setInputText("")}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 text-xs sm:text-sm"
                     disabled={!inputText || isLoading}
                   >
                     Clear All
@@ -219,8 +219,8 @@ export function Humanizer() {
                   </Button>
                 </div>
               </div>
-              <div className="space-y-6">
-                <div className="flex items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
+              <div className="space-y-4 sm:space-y-6">
+                <div className="flex flex-wrap items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
                   <StatDisplay
                     icon={Type}
                     label="Characters"
@@ -246,27 +246,20 @@ export function Humanizer() {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder="Type or paste your text here..."
-                  className="min-h-[600px] resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20"
+                  className="min-h-[300px] sm:min-h-[400px] lg:min-h-[600px] resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20"
                   disabled={isLoading}
                 />
-                <div className="flex gap-3">
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={!inputText || isLoading}
-                    className="w-full bg-primary hover:bg-primary/90 transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none"
-                    size="lg"
-                  >
-                    {isLoading && (
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    )}
-                    {isLoading ? "Humanizing..." : "Humanize Text"}
-                  </Button>
-                </div>
-                {error && (
-                  <div className="text-red-500 text-sm mt-2 text-center bg-red-50 p-3 rounded-lg border border-red-100 animate-in fade-in duration-200">
-                    {error}
-                  </div>
-                )}
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!inputText || isLoading}
+                  className="w-full bg-primary hover:bg-primary/90 transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none text-sm sm:text-base"
+                  size="lg"
+                >
+                  {isLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                  )}
+                  {isLoading ? "Humanizing..." : "Humanize Text"}
+                </Button>
               </div>
             </Card>
           )}
@@ -274,21 +267,21 @@ export function Humanizer() {
           {/* Output Section */}
           {!isInputMaximized && (
             <Card
-              className={`p-8 shadow-xl border-2 hover:border-primary/20 transition-colors ${
-                isOutputMaximized ? "col-span-full h-[calc(100vh-20rem)]" : ""
+              className={`p-4 sm:p-6 lg:p-8 shadow-xl border-2 hover:border-primary/20 transition-colors ${
+                isOutputMaximized ? "col-span-full h-[calc(100vh-16rem)]" : ""
               }`}
             >
               <div
-                className={`space-y-6 ${
+                className={`space-y-4 sm:space-y-6 ${
                   isOutputMaximized ? "h-full flex flex-col" : ""
                 }`}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <h2 className="text-2xl font-semibold">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                    <h2 className="text-xl sm:text-2xl font-semibold">
                       <span className="text-foreground">Humanized Text</span>
                     </h2>
-                    <span className="text-sm px-3 py-1 rounded-full bg-muted/50 border border-border/40 text-muted-foreground">
+                    <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-muted/50 border border-border/40 text-muted-foreground w-fit">
                       {getRemainingText()}
                     </span>
                   </div>
@@ -296,22 +289,20 @@ export function Humanizer() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="flex items-center gap-2 transition-colors duration-200"
+                      className="flex items-center gap-2 transition-colors duration-200 text-xs sm:text-sm"
                       onClick={handleCopy}
                       title="Copy to clipboard"
                       disabled={!outputText}
                     >
                       {isCopied ? (
                         <>
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-green-500">
-                            Copied!
-                          </span>
+                          <Check className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
+                          <span className="text-green-500">Copied!</span>
                         </>
                       ) : (
                         <>
-                          <Copy className="h-4 w-4" />
-                          <span className="text-sm">Copy</span>
+                          <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <span>Copy</span>
                         </>
                       )}
                     </Button>
@@ -330,7 +321,7 @@ export function Humanizer() {
                     </Button>
                   </div>
                 </div>
-                <div className="flex items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
+                <div className="flex flex-wrap items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
                   <StatDisplay
                     icon={Type}
                     label="Characters"
@@ -353,15 +344,15 @@ export function Humanizer() {
                   />
                 </div>
                 {isLoading ? (
-                  <div className="flex items-center justify-center min-h-[600px] bg-muted/30 rounded-lg animate-pulse">
+                  <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px] lg:min-h-[600px] bg-muted/30 rounded-lg animate-pulse">
                     <div className="text-center space-y-2">
                       <div className="relative">
                         <div className="absolute inset-0 animate-ping opacity-25">
-                          <Loader2 className="h-10 w-10 mx-auto text-primary" />
+                          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 mx-auto text-primary" />
                         </div>
-                        <Loader2 className="h-10 w-10 animate-spin mx-auto text-primary relative" />
+                        <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin mx-auto text-primary relative" />
                       </div>
-                      <p className="text-muted-foreground font-medium mt-4">
+                      <p className="text-sm sm:text-base text-muted-foreground font-medium mt-4">
                         Transforming your text...
                       </p>
                       <LoadingTimer />
@@ -370,15 +361,17 @@ export function Humanizer() {
                 ) : (
                   <div
                     className={`${
-                      isOutputMaximized ? "flex-grow" : "min-h-[600px]"
-                    } bg-muted/30 rounded-lg p-6 relative group transition-all duration-200 hover:bg-muted/40 overflow-y-auto`}
+                      isOutputMaximized
+                        ? "flex-grow"
+                        : "min-h-[300px] sm:min-h-[400px] lg:min-h-[600px]"
+                    } bg-muted/30 rounded-lg p-4 sm:p-6 relative group transition-all duration-200 hover:bg-muted/40 overflow-y-auto`}
                   >
                     {outputText ? (
-                      <div className="whitespace-pre-wrap text-base leading-relaxed">
+                      <div className="whitespace-pre-wrap text-sm sm:text-base leading-relaxed">
                         {outputText}
                       </div>
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-medium">
+                      <div className="absolute inset-0 flex items-center justify-center text-sm sm:text-base text-muted-foreground font-medium text-center px-4">
                         Humanized text will appear here
                       </div>
                     )}
@@ -390,9 +383,9 @@ export function Humanizer() {
         </div>
       </div>
       <footer className="py-4 border-t border-border/40">
-        <div className="container max-w-screen-2xl mx-auto px-8 text-center text-sm text-muted-foreground">
+        <div className="container max-w-screen-2xl mx-auto px-4 sm:px-8 text-center text-xs sm:text-sm text-muted-foreground">
           <p className="mb-1">
-            © 2025 Shyamsundar Shrestha. All rights reserved.
+            © 2025 Swaraj & Shyamsundar. All rights reserved.
           </p>
           <div className="flex justify-center items-center gap-2 mt-2">
             <Instagram size={16} />

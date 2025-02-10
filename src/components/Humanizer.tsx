@@ -195,18 +195,29 @@ export function Humanizer() {
                 <h2 className="text-2xl font-semibold flex items-center gap-2">
                   <span className="text-foreground">Original Text</span>
                 </h2>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setIsInputMaximized(!isInputMaximized)}
-                  className="flex items-center gap-2"
-                >
-                  {isInputMaximized ? (
-                    <Minimize2 className="h-4 w-4" />
-                  ) : (
-                    <Maximize2 className="h-4 w-4" />
-                  )}
-                </Button>
+                <div className="flex items-center gap-3">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setInputText("")}
+                    className="flex items-center gap-2"
+                    disabled={!inputText || isLoading}
+                  >
+                    Clear All
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsInputMaximized(!isInputMaximized)}
+                    className="flex items-center gap-2"
+                  >
+                    {isInputMaximized ? (
+                      <Minimize2 className="h-4 w-4" />
+                    ) : (
+                      <Maximize2 className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </div>
               <div className="space-y-6">
                 <div className="flex items-center divide-x divide-border/50 bg-muted/50 px-2 py-1.5 rounded-lg backdrop-blur-sm overflow-x-auto">
@@ -238,17 +249,19 @@ export function Humanizer() {
                   className="min-h-[600px] resize-none focus:ring-2 focus:ring-primary/20 text-base leading-relaxed transition-shadow duration-200 ease-in-out hover:bg-muted/20"
                   disabled={isLoading}
                 />
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!inputText || isLoading}
-                  className="w-full bg-primary hover:bg-primary/90 transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none"
-                  size="lg"
-                >
-                  {isLoading && (
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  )}
-                  {isLoading ? "Humanizing..." : "Humanize Text"}
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={!inputText || isLoading}
+                    className="w-full bg-primary hover:bg-primary/90 transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none"
+                    size="lg"
+                  >
+                    {isLoading && (
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    )}
+                    {isLoading ? "Humanizing..." : "Humanize Text"}
+                  </Button>
+                </div>
                 {error && (
                   <div className="text-red-500 text-sm mt-2 text-center bg-red-50 p-3 rounded-lg border border-red-100 animate-in fade-in duration-200">
                     {error}

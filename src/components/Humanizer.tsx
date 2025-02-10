@@ -377,6 +377,19 @@ export function Humanizer() {
                     )}
                   </div>
                 )}
+                {outputText && (
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={!inputText || isLoading}
+                    className="w-full bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none text-sm sm:text-base mt-4 sm:mt-6"
+                    size="lg"
+                  >
+                    {isLoading && (
+                      <Loader2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                    )}
+                    {isLoading ? "Rehumanizing..." : "Rehumanize Text"}
+                  </Button>
+                )}
               </div>
             </Card>
           )}

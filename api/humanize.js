@@ -42,15 +42,17 @@ export default async function handler(req, res) {
 6. Ensure Logical Flow and Organic Formatting: Organize the text into naturally flowing paragraphs. Use smooth transitions between ideas and maintain a coherent structure that guides the reader seamlessly through the narrative, as if it were the unfolding of a genuine thought process.
 7. Introduce Subtle Imperfections: Don't shy away from slight imperfections—occasional informalities, minor deviations from strict grammatical rules, and the natural randomness of human expression. These small "flaws" are key to masking any signs of mechanical generation.
 8. Use less of the symbols like –, :, and ; and more of naturally writing symbols
-9. Don't give me the response in markdown format.`,
+9. Don't give me the response in markdown format.
+10. Give me the response in around the same length as the original text
+11. Make every sentence complete and correct. Don't just randomize the words.`,
             },
             {
               role: "user",
               content: text,
             },
           ],
-          temperature: 1.9,
-          top_p: 0.9,
+          temperature: 1.5,
+          top_p: 0.7,
         }),
       }
     );

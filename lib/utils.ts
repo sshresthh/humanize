@@ -12,7 +12,7 @@ export function findTextDifferences(
   const originalWords = originalText.toLowerCase().split(/\s+/);
   const newWords = newText.toLowerCase().split(/\s+/);
 
-  const addedWords = newWords.filter(word => !originalWords.includes(word));
+  const addedWords = newWords.filter((word) => !originalWords.includes(word));
 
   let longestUnchangedPart = "";
   let currentUnchanged = "";

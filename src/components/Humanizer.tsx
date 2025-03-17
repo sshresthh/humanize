@@ -408,7 +408,7 @@ export function Humanizer() {
                     <Button
                       onClick={handleRehumanize}
                       disabled={!editableOutput || isLoading}
-                      className="w-full bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none text-sm sm:text-base mt-4 sm:mt-6"
+                      className="w-full bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white transition-colors duration-200 shadow-lg hover:shadow-xl disabled:shadow-none text-sm sm:text-base mt-4 sm:mt-6"
                       size="lg"
                     >
                       {isLoading && (
